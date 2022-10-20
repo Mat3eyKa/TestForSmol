@@ -1,0 +1,77 @@
+<h1>Список космических обьектов</h1>
+<input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
+<table *ngIf="tableMode; else create" class="table table-striped">
+  <thead>
+    <tr>
+      <td>Названеие обьекта</td>
+      <td>Диаметер(Км)</td>
+      <td>Масса(Тонны)</td>
+      <td>Тип обьекта</td>
+      <td>Действия</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of spaseObjects">
+      <ng-template [ngIf]="spaseObject?.id != p.id" [ngIfElse]="edit">
+        <td>{{p?.spaseObjectName}}</td>
+        <td>{{p?.diameter}}</td>
+        <td>{{p?.mass}}</td>
+        <td>{{p?.typeObject}}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" (click)="editSpaseObject(p)">Изменить</button>
+          <button class="btn btn-sm btn-danger" (click)="delete(p)">Удалить</button>
+        </td>
+      </ng-template>
+    </tr>
+  </tbody>
+</table>
+
+<!--шаблон для редактирования-->
+<ng-template #edit>
+  <td>
+    <input type="text" [(ngModel)]="spaseObject.spaseObjectName" class="form-control" #name="ngModel" />
+    <div [hidden]="name.valid || name.untouched" class="alert alert-danger">Не указано имя</div>
+  </td>
+  <td>
+    <input type="number" [(ngModel)]="spaseObject.diameter" class="form-control" />
+  </td>
+  <td>
+    <input type="number" [(ngModel)]="spaseObject.mass" class="form-control" />
+  </td>
+  <td>
+    <select [(ngModel)]="spaseObject.typeObject" class="form-control">
+      <option type="text" *ngFor="let type of spaseObjectsTypes" [ngValue]="type">{{type}}</option>
+    </select>
+  </td>
+  <td>
+    <input type="button" value="Сохранить" (click)="save()" class="btn btn-sm btn-success" />
+    <input type="button" value="Отмена" (click)="cancel()" class="btn btn-sm btn-warning" />
+  </td>
+</ng-template>
+
+<!--шаблон для добавления-->
+<ng-template #create>
+  <div class="form-group">
+    <label>Названеие космического обьекта</label>
+    <input type="text" [(ngModel)]="spaseObject.spaseObjectName" class="form-control" #name="ngModel" />
+    <div [hidden]="name.valid || name.untouched" class="alert alert-danger">Не указано имя</div>
+  </div>
+  <div class="form-group">
+    <label>Диаметр</label>
+    <input type="number" [(ngModel)]="spaseObject.diameter" class="form-control" />
+  </div>
+  <div class="form-group">
+    <label>Масса</label>
+    <input type="number" [(ngModel)]="spaseObject.mass" class="form-control" />
+  </div>
+  <div class="form-group">
+    <label>Тип обьекта</label>
+    <select [(ngModel)]="spaseObject.typeObject" class="form-control">
+      <option type="text"  *ngFor="let type of spaseObjectsTypes" [ngValue]="type">{{type}}</option>
+    </select>
+  </div>
+  <div>
+    <input type="button" value="Сохранить" (click)="save()" class="btn btn-success" />
+    <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+  </div>
+</ng-template>

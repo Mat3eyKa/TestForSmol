@@ -1,0 +1,69 @@
+<h1>Звездные системы</h1>
+<input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
+<table *ngIf="tableMode; else create" class="table table-striped">
+    <thead>
+        <tr>
+            <td>Название системы</td>
+            <td>Возраст(года)</td>
+            <td>Центр гравитации</td>
+            <td>Действия</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let p of starSystems">
+            <ng-template [ngIf]="starSystem?.id != p.id" [ngIfElse]="edit">
+                <td>{{p?.starSystemName}}</td>
+                <td>{{p?.age}}</td>
+                <td>{{p?.centerOfGravity}}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" (click)="editStarSystem(p); loadSpaseObjectsById(p)">Изменить</button>
+                    <button class="btn btn-sm btn-danger" (click)="delete(p)">Удалить</button>
+                    <button class="btn btn-sm btn-success" [routerLink]="['/SpaseObject', p]">Обьекты</button>
+                </td>
+            </ng-template>
+        </tr>
+    </tbody>
+</table>
+
+<!--шаблон для редактирования-->
+<ng-template #edit>
+    <td>
+        <input type="text" [(ngModel)]="starSystem.starSystemName" #name="ngModel" class="form-control" />
+        <div [hidden]="name.valid || name.untouched" class="alert alert-danger">Не указано имя</div>
+    </td>
+    <td>
+        <input type="number" [(ngModel)]="starSystem.age" class="form-control" />
+    </td>
+    <td>
+        <ng-template [ngIf]="spaseObjects.length > 0" [ngIfElse]="spaseObjectsEmpty">
+            <select [(ngModel)]="starSystem.centerOfGravity" class="form-control">
+                <option>{{"Не выбрано"}}</option>
+                <option type="text" *ngFor="let object of spaseObjects" [ngValue]="object">{{object}}</option>
+            </select>
+        </ng-template>
+        <ng-template #spaseObjectsEmpty>
+            <a>Нет звезд либо черных дыр</a>
+        </ng-template>
+    </td>
+    <td>
+        <input type="button" value="Сохранить" (click)="save()" class="btn btn-sm btn-success" />
+        <input type="button" value="Отмена" (click)="cancel()" class="btn btn-sm btn-warning" />
+    </td>
+</ng-template>
+
+<!--шаблон для добавления-->
+<ng-template #create>
+    <div class="form-group">
+        <label>Название системы</label>
+        <input type="text" [(ngModel)]="starSystem.starSystemName" class="form-control" #name="ngModel" required />
+        <div [hidden]="name.valid || name.untouched" class="alert alert-danger">Не указано имя</div>
+    </div>
+    <div class="form-group">
+        <label>Возраст</label>
+        <input type="number" [(ngModel)]="starSystem.age" class="form-control" />
+    </div>
+    <div>
+        <input type="button" value="Сохранить" (click)="save()" class="btn btn-success" />
+        <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+    </div>
+</ng-template>
